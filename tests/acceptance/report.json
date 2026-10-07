@@ -1,7 +1,7 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-10-07T17:22:12Z",
-  "commit": "371a2527d9ac20920cb88bf2adf36b94c9de3d31",
+  "generatedAt": "2026-10-07T17:47:25Z",
+  "commit": "9e6f76151a69c0e5b330534a888a784a05adb2b8",
   "baseUrl": "http://development-default.openchoreoapis.localhost:19080/p5-ms-1007a-greeter-http",
   "isolation": "the service is stateless with no persisted data; each scenario asserts directly on the response to its own request, so no container or baseline count is needed",
   "scenarios": [
@@ -17,14 +17,14 @@
         {
           "text": "an API Client sends GET /hello?name=Ada",
           "keyword": "When",
-          "command": "curl -s -i \"$BASE/hello?name=Ada\""
+          "command": "curl -s -w \"\\nHTTP_STATUS:%{http_code}\\n\" \"$BASE/hello?name=Ada\""
         },
         {
           "text": "the response is a JSON greeting \"Hello, Ada\"",
           "keyword": "Then",
-          "command": "curl -s -i \"$BASE/hello?name=Ada\"",
+          "command": "curl -s -w \"\\nHTTP_STATUS:%{http_code}\\n\" \"$BASE/hello?name=Ada\"",
           "exit": 0,
-          "observed": "HTTP/1.1 200 OK, content-type: application/json, body: {\"message\":\"Hello, Ada\"}"
+          "observed": "HTTP_STATUS:200, body: {\"message\":\"Hello, Ada\"}"
         }
       ],
       "evidence": {
@@ -46,14 +46,14 @@
         {
           "text": "an API Client sends GET /hello with no name parameter",
           "keyword": "When",
-          "command": "curl -s -i \"$BASE/hello\""
+          "command": "curl -s -w \"\\nHTTP_STATUS:%{http_code}\\n\" \"$BASE/hello\""
         },
         {
           "text": "the response is a JSON greeting \"Hello, World!\"",
           "keyword": "Then",
-          "command": "curl -s -i \"$BASE/hello\"",
+          "command": "curl -s -w \"\\nHTTP_STATUS:%{http_code}\\n\" \"$BASE/hello\"",
           "exit": 0,
-          "observed": "HTTP/1.1 200 OK, content-type: application/json, body: {\"message\":\"Hello, World!\"}"
+          "observed": "HTTP_STATUS:200, body: {\"message\":\"Hello, World!\"}"
         }
       ],
       "evidence": {
@@ -75,19 +75,19 @@
         {
           "text": "an API Client sends GET /hello with a name 41 characters long",
           "keyword": "When",
-          "command": "curl -s -i \"$BASE/hello?name=$(printf 'a%.0s' {1..41})\""
+          "command": "NAME41=$(python3 -c \"print('A'*41)\"); curl -s -w \"\\nHTTP_STATUS:%{http_code}\\n\" \"$BASE/hello?name=$NAME41\""
         },
         {
           "text": "the response is a 400 error and no greeting is returned",
           "keyword": "Then",
-          "command": "curl -s -i \"$BASE/hello?name=$(printf 'a%.0s' {1..41})\"",
+          "command": "NAME41=$(python3 -c \"print('A'*41)\"); curl -s -w \"\\nHTTP_STATUS:%{http_code}\\n\" \"$BASE/hello?name=$NAME41\"",
           "exit": 0,
-          "observed": "HTTP/1.1 400 Bad Request, body: {\"error\":\"name must be 40 characters or fewer\"} — no \"message\" field present"
+          "observed": "HTTP_STATUS:400, body: {\"error\":\"name must be 40 characters or fewer\"} — no \"message\" field present"
         }
       ],
       "evidence": {
         "network": [
-          { "method": "GET", "url": "/hello?name=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "status": 400 }
+          { "method": "GET", "url": "/hello?name=AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", "status": 400 }
         ],
         "console": []
       }
