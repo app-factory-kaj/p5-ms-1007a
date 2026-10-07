@@ -31,3 +31,4 @@ See [Product-wide](product-wide.md).
 - Authentication or authorization on the endpoint. *assumed*
 - Persisting greetings or any other data. *assumed*
 - A user interface of any kind.
+
