@@ -1,0 +1,96 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-07T17:22:12Z",
+  "commit": "371a2527d9ac20920cb88bf2adf36b94c9de3d31",
+  "baseUrl": "http://development-default.openchoreoapis.localhost:19080/p5-ms-1007a-greeter-http",
+  "isolation": "the service is stateless with no persisted data; each scenario asserts directly on the response to its own request, so no container or baseline count is needed",
+  "scenarios": [
+    {
+      "feature": "F1 Greeting API",
+      "featureFile": "specs/validation/acceptance/F1-greeting-api.feature",
+      "line": 6,
+      "rule": "A named caller is greeted by name",
+      "scenario": "Greeting a given name",
+      "tags": [],
+      "outcome": "passed",
+      "steps": [
+        {
+          "text": "an API Client sends GET /hello?name=Ada",
+          "keyword": "When",
+          "command": "curl -s -i \"$BASE/hello?name=Ada\""
+        },
+        {
+          "text": "the response is a JSON greeting \"Hello, Ada\"",
+          "keyword": "Then",
+          "command": "curl -s -i \"$BASE/hello?name=Ada\"",
+          "exit": 0,
+          "observed": "HTTP/1.1 200 OK, content-type: application/json, body: {\"message\":\"Hello, Ada\"}"
+        }
+      ],
+      "evidence": {
+        "network": [
+          { "method": "GET", "url": "/hello?name=Ada", "status": 200 }
+        ],
+        "console": []
+      }
+    },
+    {
+      "feature": "F1 Greeting API",
+      "featureFile": "specs/validation/acceptance/F1-greeting-api.feature",
+      "line": 13,
+      "rule": "A caller who gives no name still gets a greeting",
+      "scenario": "Greeting with no name given",
+      "tags": [],
+      "outcome": "passed",
+      "steps": [
+        {
+          "text": "an API Client sends GET /hello with no name parameter",
+          "keyword": "When",
+          "command": "curl -s -i \"$BASE/hello\""
+        },
+        {
+          "text": "the response is a JSON greeting \"Hello, World!\"",
+          "keyword": "Then",
+          "command": "curl -s -i \"$BASE/hello\"",
+          "exit": 0,
+          "observed": "HTTP/1.1 200 OK, content-type: application/json, body: {\"message\":\"Hello, World!\"}"
+        }
+      ],
+      "evidence": {
+        "network": [
+          { "method": "GET", "url": "/hello", "status": 200 }
+        ],
+        "console": []
+      }
+    },
+    {
+      "feature": "F1 Greeting API",
+      "featureFile": "specs/validation/acceptance/F1-greeting-api.feature",
+      "line": 21,
+      "rule": "A name over 40 characters is refused",
+      "scenario": "An overlong name is rejected",
+      "tags": ["@negative"],
+      "outcome": "passed",
+      "steps": [
+        {
+          "text": "an API Client sends GET /hello with a name 41 characters long",
+          "keyword": "When",
+          "command": "curl -s -i \"$BASE/hello?name=$(printf 'a%.0s' {1..41})\""
+        },
+        {
+          "text": "the response is a 400 error and no greeting is returned",
+          "keyword": "Then",
+          "command": "curl -s -i \"$BASE/hello?name=$(printf 'a%.0s' {1..41})\"",
+          "exit": 0,
+          "observed": "HTTP/1.1 400 Bad Request, body: {\"error\":\"name must be 40 characters or fewer\"} — no \"message\" field present"
+        }
+      ],
+      "evidence": {
+        "network": [
+          { "method": "GET", "url": "/hello?name=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "status": 400 }
+        ],
+        "console": []
+      }
+    }
+  ]
+}
