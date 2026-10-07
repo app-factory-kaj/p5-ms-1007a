@@ -1,0 +1,14 @@
+{
+  "name": "greeter",
+  "type": "service",
+  "version": "0.1.0",
+  "language": "Go",
+  "buildpack": "docker",
+  "appPath": "greeter",
+  "entrypoint": "deployment/service",
+  "exposure": "internet",
+  "dependencies": [],
+  "description": "Single-endpoint Go HTTP service: GET /hello?name=X returns a JSON greeting (\"Hello, X\"), defaulting to \"Hello, World!\" when name is omitted and rejecting a name over 40 characters with a 400. Follows the layout and JSON error-shape conventions in app-factory-kaj/e2e-reference (cmd/<service>/main.go entrypoint, net/http, {\"error\": \"message\"} error bodies, PORT env var). Holds no persisted state, no authentication, and no other endpoints beyond a health check.",
+  "stories": ["F1.1", "F1.2", "F1.3"],
+  "skillsPinned": ["openapi-conventions", "go"]
+}

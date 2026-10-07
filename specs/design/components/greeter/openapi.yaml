@@ -1,0 +1,68 @@
+openapi: 3.0.3
+info:
+  title: Greeter API
+  version: 0.1.0
+  description: >
+    Single-endpoint greeting service. Error shape follows
+    app-factory-kaj/e2e-reference conventions: {"error": "message"}.
+servers:
+  - url: /
+paths:
+  /hello:
+    get:
+      operationId: getGreeting
+      summary: Return a JSON greeting for the given name, or a default greeting
+      parameters:
+        - name: name
+          in: query
+          required: false
+          schema:
+            type: string
+            maxLength: 40
+          description: The name to greet; omit for a generic greeting
+      responses:
+        '200':
+          description: A greeting for the given name, or the default greeting
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greeting'
+        '400':
+          description: name is longer than 40 characters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /healthz:
+    get:
+      operationId: getHealth
+      summary: Liveness check
+      responses:
+        '200':
+          description: The service is up
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Health'
+components:
+  schemas:
+    Greeting:
+      type: object
+      required: [message]
+      properties:
+        message:
+          type: string
+          description: The greeting text, e.g. "Hello, Ada" or "Hello, World!"
+    Error:
+      type: object
+      required: [error]
+      properties:
+        error:
+          type: string
+          description: Short human-readable error message
+    Health:
+      type: object
+      required: [status]
+      properties:
+        status:
+          type: string
