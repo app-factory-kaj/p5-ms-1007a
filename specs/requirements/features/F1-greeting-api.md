@@ -4,9 +4,14 @@
 
 Lets an API Client get a JSON greeting for a given name over plain HTTP.
 
-## Open Questions
+## User Stories
 
-1. Should `GET /hello` require the `name` query parameter, or return a
- default greeting when it is omitted? *blocking*
-   - Require `name`; respond with an error when it is missing
-   - Default to a generic greeting (e.g. "Hello, World!") when `name` is missing
+- F1.1 As an API Client, I send `GET /hello?name=X` and receive a JSON
+greeting addressed to X.
+- F1.2 As an API Client, I send `GET /hello` without a `name` and receive a
+default JSON greeting rather than an error.
+
+## Decisions
+
+- When `name` is omitted, the response defaults to a generic greeting (e.g.
+`{"message": "Hello, World!"}`) instead of an error.
