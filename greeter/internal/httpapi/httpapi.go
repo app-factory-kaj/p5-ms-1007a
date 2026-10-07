@@ -11,6 +11,7 @@ import (
 func NewRouter() http.Handler {
 	mux := http.NewServeMux()
 	mux.HandleFunc("GET /healthz", handleHealth)
+	mux.HandleFunc("GET /hello", handleHello)
 	return mux
 }
 
